@@ -12,7 +12,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{BE45E8
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
-Project("{CC5FD16D-436D-48AD-A40C-5A424C6E3E79}") = "CachedMovie", "CachedMove\CachedMovie.ccproj", "{242CD52A-B90B-4D5A-B0CE-0052ECA415E5}"
+Project("{CC5FD16D-436D-48AD-A40C-5A424C6E3E79}") = "CachedMovie", "CachedMovie\CachedMovie.ccproj", "{242CD52A-B90B-4D5A-B0CE-0052ECA415E5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cache", "Cache\Cache.csproj", "{EFA9157B-8D10-45B6-89A0-CFC76017B562}"
 EndProject
