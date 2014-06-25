@@ -7,14 +7,23 @@ namespace AzureCache
     public class AzureCacheProvider : ICacheProvider, IDisposable
     {
         private readonly DataCache _defaultCacheProvider;
-        private DataCacheFactory _cacheFactory;
+        private readonly DataCache _globalCacheProvider;
+
+        private DataCacheFactory _defaultcacheFactory;
+        private DataCacheFactory _globalcacheFactory;
 
         public AzureCacheProvider()
         {
             if (_defaultCacheProvider == null)
             {                
-                _cacheFactory = new DataCacheFactory();
-                _defaultCacheProvider = _cacheFactory.GetDefaultCache();
+                _defaultcacheFactory = new DataCacheFactory();
+                _defaultCacheProvider = _defaultcacheFactory.GetDefaultCache();
+            }
+            if (_globalCacheProvider == null)
+            {
+                var dataCacheFactoryConfiguration = new DataCacheFactoryConfiguration("global");
+                _globalcacheFactory = new DataCacheFactory(dataCacheFactoryConfiguration);
+                _globalCacheProvider = _defaultcacheFactory.GetDefaultCache();
             }
         }
 
@@ -24,7 +33,7 @@ namespace AzureCache
             Dispose(true);
         }
 
-        public void SetCacheData(string cacheKey, object cacheValue)
+        public void SetCacheData(string cacheKey, object cacheValue, bool isGlobal = false)
         {
 
             P.Incremental retryStrategy =
@@ -33,14 +42,13 @@ namespace AzureCache
                 new P.RetryPolicy<P.StorageTransientErrorDetectionStrategy>(retryStrategy);
             retryPolicy.ExecuteAction(
                 () =>
-                    {
-                        _defaultCacheProvider.Put(cacheKey, cacheValue);
-
-                      
-                    });
+                {
+                    var provider = isGlobal ? _globalCacheProvider : _defaultCacheProvider;
+                    provider.Put(cacheKey, cacheValue);
+                });
         }
 
-        public object GetCacheData(string cacheKey)
+        public object GetCacheData(string cacheKey, bool isGlobal = false)
         {
             P.Incremental retryStrategy =
                 new P.Incremental(5, TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(2));
@@ -50,13 +58,14 @@ namespace AzureCache
             retryPolicy.ExecuteAction(
                 () =>
                     {
-                        cachedData = _defaultCacheProvider.Get(cacheKey);
+                        var provider = isGlobal ? _globalCacheProvider : _defaultCacheProvider;
+                        cachedData = provider.Get(cacheKey);
                     });
 
             return cachedData;
         }
 
-        public void RemoveCacheData(string cacheKey)
+        public void RemoveCacheData(string cacheKey, bool isGlobal = false)
         {
             P.Incremental retryStrategy =
                 new P.Incremental(5, TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(2));
@@ -65,8 +74,8 @@ namespace AzureCache
             retryPolicy.ExecuteAction(
                 () =>
                     {
+                        var provider = isGlobal ? _globalCacheProvider : _defaultCacheProvider;
                         _defaultCacheProvider.Remove(cacheKey);
-
                        
                     });
         }
@@ -85,10 +94,17 @@ namespace AzureCache
 
             if (disposing)
             {
-                if (_cacheFactory != null)
+                if (_defaultcacheFactory != null)
                 {
-                    _cacheFactory.Dispose();
-                    _cacheFactory = null;
+                    _defaultcacheFactory.Dispose();
+                    _defaultcacheFactory = null;
+
+                    _disposed = true;
+                }
+                if (_globalcacheFactory != null)
+                {
+                    _globalcacheFactory.Dispose();
+                    _globalcacheFactory = null;
 
                     _disposed = true;
                 }

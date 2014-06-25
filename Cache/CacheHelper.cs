@@ -48,19 +48,19 @@ namespace Cache
         /// </summary>
         internal static ICacheProvider Provider { private get; set; }
 
-        public static void SetCachedData<T>(string cacheKey, T data)
+        public static void SetCachedData<T>(string cacheKey, T data, bool isGlobal = false)
         {
-            Provider.SetCacheData(cacheKey, data);
+            Provider.SetCacheData(cacheKey, data, isGlobal);
         }
 
-        public static T GetCachedData<T>(string cacheKey) where T : class
+        public static T GetCachedData<T>(string cacheKey, bool isGlobal = false) where T : class
         {
-            return Provider.GetCacheData(cacheKey) as T;
+            return Provider.GetCacheData(cacheKey, isGlobal) as T;
         }
 
-        public static void RemoveCachedData(string cacheKey)
+        public static void RemoveCachedData(string cacheKey, bool isGlobal = false)
         {
-            Provider.RemoveCacheData(cacheKey);
+            Provider.RemoveCacheData(cacheKey, isGlobal);
         }
     }
 }

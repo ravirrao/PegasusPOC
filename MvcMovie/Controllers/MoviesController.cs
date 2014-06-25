@@ -420,6 +420,51 @@ public ActionResult Create()
           return View("Info");
       }
 
+      public ActionResult WriteManagedCache(int id = 1)
+      {
+          Stopwatch sw = Stopwatch.StartNew();
+
+          int cntMax = 1000 * id;
+
+          try
+          {
+              for (int i = 0; i < cntMax; i++)
+              {
+                  CacheHelper.SetCachedData("c" + i.ToString(), (i * 3).ToString(), true);
+              }
+          }
+          catch (TimeoutException tx)
+          {
+              ViewBag.errorMsg = tx.Message + " attempting to add" + id.ToString() + " K items added to cache";
+              return View("Error");
+          }
+          StopWatchEnd(sw);
+          ViewBag.InfoMsg = ("1000 items added to azure managed cache");
+          return View("Info");
+      }
+
+      public ActionResult ReadManagedCache(int id = 1)
+      {
+          Stopwatch sw = Stopwatch.StartNew();
+
+          int cntMax = 1000 * id;
+
+          for (int i = 0; i < cntMax; i++)
+          {
+              string item = CacheHelper.GetCachedData<string>("c" + i.ToString(), true);
+              if (Convert.ToInt32(item) != i * 3)
+              {
+                  ViewBag.errorMsg = "Invalid cache data, i=" + i.ToString() + " Val= " + item
+                                     + "  Should be: " + (i * 3).ToString() + " size = " + id.ToString() + " K";
+                  return View("Error");
+              }
+          }
+
+          StopWatchEnd(sw);
+          ViewBag.InfoMsg = "1000 items read from the azure managed cache";
+          return View("Info");
+      }
+
       // GET: /Movies/Delete/5
       public ActionResult Delete(int? id)
       {
