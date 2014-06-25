@@ -1,0 +1,57 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Movie App</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("MVC Movie", "Index", "Movies", null, new { @class = "navbar-brand" })
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                    <li>@Html.ActionLink("CacheBigRedis", "CacheBig", "Movies")</li>
+                   <li>@Html.ActionLink("WriteRedisCache", "WriteCache", "Movies")</li>
+                   <li>@Html.ActionLink("ReadRedisCache", "ReadCache", "Movies")</li>
+                    <li>@Html.ActionLink("ClearMovieCache", "ClearCache", "Movies")</li>
+                      <li>@Html.ActionLink("WriteAzureCache", "WriteAzureCache", "Movies")</li>
+                   <li>@Html.ActionLink("ReadAzureCache", "ReadAzureCache", "Movies")</li>
+                   <li>@Html.ActionLink("WriteSession", "WriteSession", "SessionTest")</li>
+                   <li>@Html.ActionLink("ReadSession", "ReadSession", "SessionTest")</li>
+                   <li>@Html.ActionLink("Ping", "Ping", "Movies")</li>
+                </ul>
+                @*@Html.Partial("_LoginPartial")*@
+            </div>
+        </div>
+    </div>
+   <div>
+      <h2 class="invisible"> a</h2>
+   </div>
+   <div>
+      <h2 class="invisible"> b</h2>
+   </div>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+           <h2>@ViewBag.cacheMsg</h2>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>
