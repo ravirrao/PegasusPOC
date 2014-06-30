@@ -22,6 +22,9 @@ namespace AzureCache
             if (_globalCacheProvider == null)
             {
                 var dataCacheFactoryConfiguration = new DataCacheFactoryConfiguration("global");
+                dataCacheFactoryConfiguration.SecurityProperties = new DataCacheSecurity("YWNzOmh0dHBzOi8vc2FnZXNjYWNhY2hlNDA5OS1jYWNoZS5hY2Nlc3Njb250cm9sLndpbmRvd3MubmV0Ly9XUkFQdjAuOS8mb3duZXImZTlxZUhIRGYrSjBzQTIvWThmaGtqbjUyK1VrS3FEMCtxVnNZNW1NS2hjVT0maHR0cDovL3NhZ2VzY2FjYWNoZS5jYWNoZS53aW5kb3dzLm5ldC8=", false);
+                
+
                 _globalcacheFactory = new DataCacheFactory(dataCacheFactoryConfiguration);
                 _globalCacheProvider = _defaultcacheFactory.GetDefaultCache();
             }
